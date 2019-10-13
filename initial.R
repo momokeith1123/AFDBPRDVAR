@@ -1,6 +1,5 @@
 # 3-
 # 
-
 library('data.table')
 library('dplyr')
 library('openxlsx')
@@ -76,11 +75,23 @@ for (i in seq_along(Rundates)) {
         TRUE ~"OTHERS"
       )) %>% arrange(DESK)
       
-  trd <-HVAR_RGRP[[ Rundates[i] ]][["TRADE"]]    
+  trd <-HVAR_RGRP[[ Rundates[i] ]][["TRADE"]]
+  
+  #  adding the contract or secid
+  for (row in 1:nrow (trd)) {
+    if (trd[["TYPE"]][[row]] == "BOND") {
+      trd [["SECID"]][[row]]= str_split(trd[["ALTID"]][[row]], "\\|")[[1]][[1]]
+    } else if (trd[["TYPE"]][[row]] == "FUT") {
+      trd [["SECID"]][[row]]= paste0 (str_split(trd[["ALTID"]][[row]], "\\|")[[1]][[1]],str_split(trd[["ALTID"]][[row]], "\\|")[[1]][[2]])
+    } else  {
+      trd [["SECID"]][[row]]= ""
+    }
+  }
      
   
   # adding Desk and Tradetype in TRDGRPSFT
-  trdgpsft <- HVAR_RGRP[[ Rundates[i] ]][["TRADE"]]%>%select(TRADEIDX,DESK,TYPE,RISKCCY)
+  # trdgpsft <- HVAR_RGRP[[ Rundates[i] ]][["TRADE"]]%>%select(TRADEIDX,DESK,TYPE,RISKCCY)
+  trdgpsft <- trd%>%select(-ID, ALTID, -VERSION, -DESCRIPTOR)
   trd_gpsft <- left_join(HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]], trdgpsft , by = "TRADEIDX")
   HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]] <- trd_gpsft
   
@@ -102,17 +113,32 @@ for (i in seq_along(Rundates)) {
    }, dat, names(dat))
 
    ## Save workbook to working directory
-    # saveWorkbook(wb, file = paste(CONFIG[["ADBPRDVAR"]],Rundates[[i]], ".xlsx"), overwrite = TRUE)
+    saveWorkbook(wb, file = paste(CONFIG[["ADBPRDVAR"]],Rundates[[i]], ".xlsx"), overwrite = TRUE)
                      
 }
 
 
 
 
- # saveWorkbook(wb, file = paste("hvar_RGRP_",CONFIG[["ADBPRDVAR"]], "_",CONFIG[["Rundate"]], ".xlsx"), overwrite = TRUE)
+  saveWorkbook(wb, file = paste("hvar_RGRP_",CONFIG[["ADBPRDVAR"]], "_",Rundates, ".xlsx"), overwrite = TRUE)
 
 
 
-getSecId  <- function (tradelist) {
-    
-}
+# getSecId  <- function (tradelist) {
+#   tradelist %>% mutate (SECID = case_when (
+#                                            TYPE == "BOND" ~ subset(trd, ALTID),
+#                                            TYPE == "FUT" ~"FUT",
+#                                            TYPE == "FXFWD"~"FXFWD",
+#                                            TYPE == "FXSWAP"~"FXSWAP",
+#                                            TYPE == "SWAP"~"SWAP",
+#                                            TYPE == "MM"~ "MM",
+#                                            TYPE == "REPO"~"REPO",
+#                                           ) 
+#                         )
+# }
+# 
+# findId <- function (str) {
+#     findId <- str_split(str, "\\|")[[1]][[1]]
+# }
+
+

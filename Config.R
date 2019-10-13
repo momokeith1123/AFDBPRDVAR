@@ -2,7 +2,7 @@
 
 # Remarqures d'ordre generale
 # Il ya un decalage dans le numero du GROUPIDX entre le fichier GROUP, et le fichier GRP
-# Le fichier GROUP est celui qui doit etre corrigé, il doit etre à -1.
+# Le fichier GROUP est celui qui doit etre corrig?, il doit etre ? -1.
 rm(list = setdiff(ls(), c( "DIR")))
 gc()
 
@@ -42,10 +42,10 @@ CONFIG[["workers"]] <- 4
 #  Update the rundate vectors according to what runs we wants.
 
 # c("01-07-19","08-07-19","15-07-19","22-07-19")
-#  Le Run date correspond à l'extension que Farres met dans les noms fichiers de rerun comme
+#  Le Run date correspond ? l'extension que Farres met dans les noms fichiers de rerun comme
 # hvar_RGRP_ HVAR280619R_ADBHVAR _ 28-06-19 .xlsx
 
-Rundates <- "19-09-19"
+Rundates <- "20-09-19"
 CONFIG[["ADBPRDVAR"]] <- c("ADBPRDVAR_ADBHVAR","SADBPRDVAR_STRESSADBHVAR")
 
 CONFIG[["GROUP_0"]]<-c("GROUPIDX_0", "GROUPID_0", "EXPCCY_0", "RISKCCY_0", "ALTCCY_0", "RCLASSID_0", "GROUPNUM_0", "VARAMOUNT_0")
