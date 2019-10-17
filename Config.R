@@ -6,7 +6,7 @@
 rm(list = setdiff(ls(), c( "DIR")))
 gc()
 
-
+library(dplyr)
 library(RODBC)
 con <- odbcConnect("SUMMITP", 
                    uid ="v60report", 
@@ -17,7 +17,8 @@ sqlQuery(con, "alter session set current_schema= v60")
 
 options(java.parameters = "-Xmx4g") 
 DIR <- list()
-DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
+DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
+# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
 
 # DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/spool_arch"                                                                                                             
 # DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/Spool/On_demand/VAR_20190701/Juin2019_4"
@@ -45,8 +46,16 @@ CONFIG[["workers"]] <- 4
 #  Le Run date correspond ? l'extension que Farres met dans les noms fichiers de rerun comme
 # hvar_RGRP_ HVAR280619R_ADBHVAR _ 28-06-19 .xlsx
 
-Rundates <- "20-09-19"
-CONFIG[["ADBPRDVAR"]] <- c("ADBPRDVAR_ADBHVAR","SADBPRDVAR_STRESSADBHVAR")
+Rundates <- "18-09-19"
+filterid <-"MOK_2AM_Y"
+sfilterid <-"MOK_2AM_Y"
+Ident <- "TEST"
+sIdent <- "TEST"
+
+varConfig <- paste0(filterid,"_", Ident,"_",Rundates)
+svarConfig <- paste0(sfilterid,"_", sIdent,"_",Rundates)
+
+CONFIG[["ADBPRDVAR"]] <- c(varConfig,svarConfig)
 
 CONFIG[["GROUP_0"]]<-c("GROUPIDX_0", "GROUPID_0", "EXPCCY_0", "RISKCCY_0", "ALTCCY_0", "RCLASSID_0", "GROUPNUM_0", "VARAMOUNT_0")
 CONFIG[["GROUP_1"]]<-c("GROUPIDX_1", "GROUPID_1", "EXPCCY_1", "RISKCCY_1", "ALTCCY_1", "RCLASSID_1", "GROUPNUM_1","MEAN_1","PLUP_1","PLDOWN_1")
@@ -61,8 +70,9 @@ usdua_ref <- sqlQuery(con,"select rate from cdmrateua where ccy = 'USD' and asof
                                                                      and asofperiod = to_char(to_date('20190701', 'YYYYMMDD'),'MM')" )
 usdua_prv <- sqlQuery(con,"select rate from cdmrateua where ccy = 'USD' and asofyear = to_char(to_date('20190401', 'YYYYMMDD'),'YYYY')  
                                                                      and asofperiod = to_char(to_date('20190401', 'YYYYMMDD'),'MM')" )
+dmriskdata <- sqlQuery(con, "select * from dmrisk_data where classname = 'ADBVAR'")
 
-
+# df <- tibble(dmriskdata)
 # CONFIG[["ADBPRDVAR"]] <- "HVAR280619R_ADBHVAR"
 
 # CONFIG[["SADBPRDVAR"]] <- "SADBPRDVAR_STRESSADBHVAR"

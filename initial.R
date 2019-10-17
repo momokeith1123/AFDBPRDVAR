@@ -113,14 +113,14 @@ for (i in seq_along(Rundates)) {
    }, dat, names(dat))
 
    ## Save workbook to working directory
-    saveWorkbook(wb, file = paste(CONFIG[["ADBPRDVAR"]],Rundates[[i]], ".xlsx"), overwrite = TRUE)
+    saveWorkbook(wb, file = paste(CONFIG[["ADBPRDVAR"]],Rundates[[i]], "_AGG.xlsx"), overwrite = TRUE)
                      
 }
 
 
 
 
-  saveWorkbook(wb, file = paste("hvar_RGRP_",CONFIG[["ADBPRDVAR"]], "_",Rundates, ".xlsx"), overwrite = TRUE)
+  # saveWorkbook(wb, file = paste("hvar_RGRP_",CONFIG[["ADBPRDVAR"]], "_",Rundates, ".xlsx"), overwrite = TRUE)
 
 
 
