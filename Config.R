@@ -17,8 +17,8 @@ sqlQuery(con, "alter session set current_schema= v60")
 
 options(java.parameters = "-Xmx4g") 
 DIR <- list()
-DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
-# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
+# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
+DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
 
 # DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/spool_arch"                                                                                                             
 # DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/Spool/On_demand/VAR_20190701/Juin2019_4"
@@ -46,10 +46,10 @@ CONFIG[["workers"]] <- 4
 #  Le Run date correspond ? l'extension que Farres met dans les noms fichiers de rerun comme
 # hvar_RGRP_ HVAR280619R_ADBHVAR _ 28-06-19 .xlsx
 
-Rundates <- "18-09-19"
-filterid <-"MOK_2AM_Y"
+Rundates <- "18-10-19"
+filterid <-"ADBPRDVAR"
 sfilterid <-"MOK_2AM_Y"
-Ident <- "TEST"
+Ident <- ""
 sIdent <- "TEST"
 
 varConfig <- paste0(filterid,"_", Ident,"_",Rundates)
