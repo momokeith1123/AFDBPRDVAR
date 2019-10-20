@@ -42,6 +42,19 @@ for (i in seq_along(Rundates)) {
   grp <- HVAR_RGRP[[ Rundates[i] ]][["GROUP"]] 
   grp_row <- which(grp["GROUPID"]== "GLOBAL")
   
+  # Address groupidx 
+  grp$GROUPIDX <- grp$GROUPIDX-1
+  grp <- grp %>% left_join(dt, by = "GROUPNUM")
+  HVAR_RGRP[[ Rundates[i] ]][["GROUP"]] <- grp
+  
+  grpx <- grp %>% select(GROUPIDX,DMINDEX, CCY1)
+  #  Amend the others tab
+  HVAR_RGRP[[ Rundates[i] ]][["GRP"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
+  # HVAR_RGRP[[ Rundates[i] ]][["GRPSFT"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
+  # HVAR_RGRP[[ Rundates[i] ]][["TRDGRPSFT"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
+  
+  # HVAR_RGRP[[ Rundates[i] ]][["GRP"]] <-  HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(dt, )
+  
   HVAR_RGRP[[ Rundates[i] ]][["GROUP"]] [["RCLASSID"]][[grp_row]] <- "ADBVAR"
   
   #  adding the desk and ccy in TRADE
@@ -93,6 +106,7 @@ for (i in seq_along(Rundates)) {
   # trdgpsft <- HVAR_RGRP[[ Rundates[i] ]][["TRADE"]]%>%select(TRADEIDX,DESK,TYPE,RISKCCY)
   trdgpsft <- trd%>%select(-ID, ALTID, -VERSION, -DESCRIPTOR)
   trd_gpsft <- left_join(HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]], trdgpsft , by = "TRADEIDX")
+  trd_gpsft <-  trd_gpsft %>% left_join(grpx, by = "GROUPIDX")
   HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]] <- trd_gpsft
   
   # grp_sft <- HVAR_RGRP[[ Rundates[i] ]] [["GRPSFT"]]
