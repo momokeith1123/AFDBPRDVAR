@@ -8,10 +8,13 @@ library(rebus)  # for the regular expressions String Manipulation in R with stri
 
 setwd(DIR[["function"]])
 source("loadHvarResultFile.R")
-source(getSQL.r)
+# source("getSQL.r")
+source("functionSQL.r")
 
 # Load Security Fiter given a perfvalo run
-secFilter <- sqlQuery(con,getSQL(filepathSec))  
+sqlq <- getSQL(filepathSec)
+sqlq <- ApplyFunctionParam  (ImpTimeStamp, sqlq)
+secFilter <- sqlQuery(con,sqlq)
 
 setwd(DIR[["root"]])
 if ("S.R" %in% list.files()) {
@@ -48,7 +51,7 @@ for (i in seq_along(Rundates)) {
   
   # Address groupidx 
   grp$GROUPIDX <- grp$GROUPIDX-1
-  grp <- grp %>% left_join(dt, by = "GROUPNUM")
+  # grp <- grp %>% left_join(dt, by = "GROUPNUM")
   HVAR_RGRP[[ Rundates[i] ]][["GROUP"]] <- grp
   
   grpx <- grp %>% select(GROUPIDX,DMINDEX, CCY1)
@@ -111,6 +114,11 @@ for (i in seq_along(Rundates)) {
   trdgpsft <- trd%>%select(-ID, ALTID, -VERSION, -DESCRIPTOR)
   trd_gpsft <- left_join(HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]], trdgpsft , by = "TRADEIDX")
   trd_gpsft <-  trd_gpsft %>% left_join(grpx, by = "GROUPIDX")
+  
+  # removing dmindex because not correct
+  trd_gpsft
+  # adding column from secfilter
+  trd_gpsft <- trd_gpsft %>% left_join(secFilter, by = "SECID")
   HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]] <- trd_gpsft
   
   # grp_sft <- HVAR_RGRP[[ Rundates[i] ]] [["GRPSFT"]]
@@ -137,27 +145,5 @@ for (i in seq_along(Rundates)) {
 }
 
 
-
-
-  # saveWorkbook(wb, file = paste("hvar_RGRP_",CONFIG[["ADBPRDVAR"]], "_",Rundates, ".xlsx"), overwrite = TRUE)
-
-
-
-# getSecId  <- function (tradelist) {
-#   tradelist %>% mutate (SECID = case_when (
-#                                            TYPE == "BOND" ~ subset(trd, ALTID),
-#                                            TYPE == "FUT" ~"FUT",
-#                                            TYPE == "FXFWD"~"FXFWD",
-#                                            TYPE == "FXSWAP"~"FXSWAP",
-#                                            TYPE == "SWAP"~"SWAP",
-#                                            TYPE == "MM"~ "MM",
-#                                            TYPE == "REPO"~"REPO",
-#                                           ) 
-#                         )
-# }
-# 
-# findId <- function (str) {
-#     findId <- str_split(str, "\\|")[[1]][[1]]
-# }
 
 

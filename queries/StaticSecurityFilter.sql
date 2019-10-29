@@ -1,4 +1,5 @@
 select per.*,
+rat.classvalue as rating,
 case trim(rat.classvalue)
 when 'AAA' then '3A'
 when 'AA+' then '2AP'
@@ -17,7 +18,7 @@ end || '_' || decode(substr(secclass,1,1),'A','Y',substr(secclass,1,1)) as subin
 from    (  
   select distinct book,ccy,trim(secid) as secid,secdesc, identif2, sectype, secclass, price
   from cdmperfvalo_bis
-  where datetimestamp = 'stamp'
+  where datetimestamp = 'ImportRunDate'
   and tradetype = 'BOND'
   --and company = 'ADB'
   and sectype not in ('CP', 'CD')
@@ -39,4 +40,4 @@ from    (
 ) rat
 where per.secid = rat.secid2(+)
 and per.ccy = rat.ccy
-order by  SECFILTER;
+order by  SECFILTER

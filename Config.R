@@ -17,6 +17,7 @@ sqlQuery(con, "alter session set current_schema= v60")
 
 options(java.parameters = "-Xmx4g") 
 DIR <- list()
+# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
 DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
 
 # Dev
@@ -25,14 +26,12 @@ DIR[["data"]] <- "D:/repos/AFDBPRDVAR"
 DIR[["vardata"]] <- "D:/repos/AFDBPRDVAR"
 DIR[["function"]] <- "D:/repos/AFDBPRDVAR"
 DIR[["queries"]] <- "D:/repos/AFDBPRDVAR/queries/"
+filepathSec = "D:/repos/AFDBPRDVAR/queries/StaticSecurityFilter.sql"
+ImpTimeStamp <- "2019-10-15 17:05:26.986"
 # DIR[["load"]] <- "D:/repos/AFDBPRDVAR/"
 # DIR[["compute"]] <- "D:/repos/AFDBPRDVAR/"
 # DIR[["plan"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/plan/"
 # DIR[["model"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
-
-
-
-
 
 # Production
 
@@ -40,14 +39,11 @@ DIR[["queries"]] <- "D:/repos/AFDBPRDVAR/queries/"
 # DIR[["vardata"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/data"
 # DIR[["function"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/function"
 # DIR[["load"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/load"
-# DIR[["compute"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/compute/"
+# DIR[["compute"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/compute
+
 # DIR[["plan"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/plan/"
 # DIR[["model"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
 # DIR[["queries"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/03-ScriptSQL/07-SecurityFilter/"
-
-
- # <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/03-ScriptSQL/07-SecurityFilter/StaticSecurityFilter.sql"
-
 
 
 CONFIG <- list ()
@@ -55,14 +51,10 @@ CONFIG <- list ()
 CONFIG[["isUNIX"]] <- FALSE
 CONFIG[["workers"]] <- 4
 
+# Run parameters
 
-#  Update the rundate vectors according to what runs we wants.
-
-# c("01-07-19","08-07-19","15-07-19","22-07-19")
-#  Le Run date correspond ? l'extension que Farres met dans les noms fichiers de rerun comme
-# hvar_RGRP_ HVAR280619R_ADBHVAR _ 28-06-19 .xlsx
-
-Rundates <- "27-09-19"
+Rundates <- "28-10-19"
+# varFilter <- "ADB"
 varFilter <- "ADBPRDVAR"
 svarFilter <- "SADBPRDVAR"
 

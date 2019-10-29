@@ -33,3 +33,11 @@ getShiftCurve <- function (sDate, sCur, sIndex, sqlchar)  {
   
   return(sql)
 }
+
+#  
+ApplyFunctionParam <- function (ImpTimeStamp, sqlchar)  {
+  sql <- sqlchar
+  sql <- gsub("ImportRunDate", ImpTimeStamp, sql)
+  
+  return(sql)
+}
