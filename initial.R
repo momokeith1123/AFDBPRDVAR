@@ -8,6 +8,10 @@ library(rebus)  # for the regular expressions String Manipulation in R with stri
 
 setwd(DIR[["function"]])
 source("loadHvarResultFile.R")
+source(getSQL.r)
+
+# Load Security Fiter given a perfvalo run
+secFilter <- sqlQuery(con,getSQL(filepathSec))  
 
 setwd(DIR[["root"]])
 if ("S.R" %in% list.files()) {
@@ -126,7 +130,8 @@ for (i in seq_along(Rundates)) {
 
    }, dat, names(dat))
 
-   ## Save workbook to working directory
+   
+    ## Save workbook to working directory
     saveWorkbook(wb, file = paste(CONFIG[["ADBPRDVAR"]],Rundates[[i]], "_AGG.xlsx"), overwrite = TRUE)
                      
 }

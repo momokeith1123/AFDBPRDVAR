@@ -17,20 +17,36 @@ sqlQuery(con, "alter session set current_schema= v60")
 
 options(java.parameters = "-Xmx4g") 
 DIR <- list()
-# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
 DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
 
-# DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/spool_arch"                                                                                                             
-# DIR[["data"]] <- "U:/SummitApps/PROD_AFDB_SSA/Spool/On_demand/VAR_20190701/Juin2019_4"
+# Dev
 
-DIR[["data"]] <- "//afdbsumdev/Y/Users/Mamadou/VaR_Results"
-DIR[["vardata"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/data"
-DIR[["function"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/function"
-DIR[["load"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/load"
-DIR[["compute"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/compute/"
-DIR[["plan"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/plan/"
-DIR[["model"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
-DIR[["queries"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
+DIR[["data"]] <- "D:/repos/AFDBPRDVAR"
+DIR[["vardata"]] <- "D:/repos/AFDBPRDVAR"
+DIR[["function"]] <- "D:/repos/AFDBPRDVAR"
+DIR[["queries"]] <- "D:/repos/AFDBPRDVAR/queries/"
+# DIR[["load"]] <- "D:/repos/AFDBPRDVAR/"
+# DIR[["compute"]] <- "D:/repos/AFDBPRDVAR/"
+# DIR[["plan"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/plan/"
+# DIR[["model"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
+
+
+
+
+
+# Production
+
+# DIR[["data"]] <- "//afdbsumdev/Y/Users/Mamadou/VaR_Results"
+# DIR[["vardata"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/data"
+# DIR[["function"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/function"
+# DIR[["load"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/load"
+# DIR[["compute"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/compute/"
+# DIR[["plan"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/plan/"
+# DIR[["model"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/04-ScriptR/AfdbVaR/model/"
+# DIR[["queries"]] <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/03-ScriptSQL/07-SecurityFilter/"
+
+
+ # <- "//afdbsumdev/Y/Users/Mamadou/01-Dev/03-ScriptSQL/07-SecurityFilter/StaticSecurityFilter.sql"
 
 
 
@@ -46,16 +62,15 @@ CONFIG[["workers"]] <- 4
 #  Le Run date correspond ? l'extension que Farres met dans les noms fichiers de rerun comme
 # hvar_RGRP_ HVAR280619R_ADBHVAR _ 28-06-19 .xlsx
 
-Rundates <- "18-10-19"
-filterid <-"ADBPRDVAR"
-sfilterid <-"MOK_2AM_Y"
-Ident <- ""
-sIdent <- "TEST"
+Rundates <- "27-09-19"
+varFilter <- "ADBPRDVAR"
+svarFilter <- "SADBPRDVAR"
 
-varConfig <- paste0(filterid,"_", Ident,"_",Rundates)
-svarConfig <- paste0(sfilterid,"_", sIdent,"_",Rundates)
+varIdent <- "ADBHVAR"
+svarIdent <- "STRESSADBHVAR"
 
-CONFIG[["ADBPRDVAR"]] <- c(varConfig,svarConfig)
+hedgeconfig <- "ADBVAR"
+CONFIG[["ADBPRDVAR"]] <- c(paste0(varFilter, "_", varIdent),paste0(svarFilter,svarIdent))
 
 CONFIG[["GROUP_0"]]<-c("GROUPIDX_0", "GROUPID_0", "EXPCCY_0", "RISKCCY_0", "ALTCCY_0", "RCLASSID_0", "GROUPNUM_0", "VARAMOUNT_0")
 CONFIG[["GROUP_1"]]<-c("GROUPIDX_1", "GROUPID_1", "EXPCCY_1", "RISKCCY_1", "ALTCCY_1", "RCLASSID_1", "GROUPNUM_1","MEAN_1","PLUP_1","PLDOWN_1")
@@ -71,6 +86,8 @@ usdua_ref <- sqlQuery(con,"select rate from cdmrateua where ccy = 'USD' and asof
 usdua_prv <- sqlQuery(con,"select rate from cdmrateua where ccy = 'USD' and asofyear = to_char(to_date('20190401', 'YYYYMMDD'),'YYYY')  
                                                                      and asofperiod = to_char(to_date('20190401', 'YYYYMMDD'),'MM')" )
 dmriskdata <- sqlQuery(con, "select * from dmrisk_data where classname = 'ADBVAR'")
+dt <- dmriskdata %>% select (c(CLASSNAME, TYPE, CCY1,DMINDEX, SHIFTTYPE,GROUPNUM, TRADETYPE,ID,REFCCY ,REFINDEX,MCTYPE,SHIFTFORMAT))%>% arrange(TYPE,CCY1, DMINDEX,GROUPNUM)
+              
 
 # df <- tibble(dmriskdata)
 # CONFIG[["ADBPRDVAR"]] <- "HVAR280619R_ADBHVAR"
@@ -79,4 +96,3 @@ dmriskdata <- sqlQuery(con, "select * from dmrisk_data where classname = 'ADBVAR
 
 setwd(DIR[["root"]])
 
- 
