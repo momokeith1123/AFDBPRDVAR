@@ -17,8 +17,8 @@ sqlQuery(con, "alter session set current_schema= v60")
 
 options(java.parameters = "-Xmx4g") 
 DIR <- list()
-# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
-DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
+DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool"
+# DIR[["root"]] <- "//afdbsmtprd/Summit_U_afdbsmtprd/SummitApps/PROD_AFDB_SSA/spool_arch"
 
 # Dev
 
@@ -53,7 +53,7 @@ CONFIG[["workers"]] <- 4
 
 # Run parameters
 
-Rundates <- "28-10-19"
+Rundates <- "30-09-19"
 # varFilter <- "ADB"
 varFilter <- "ADBPRDVAR"
 svarFilter <- "SADBPRDVAR"

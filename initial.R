@@ -51,13 +51,29 @@ for (i in seq_along(Rundates)) {
   
   # Address groupidx 
   grp$GROUPIDX <- grp$GROUPIDX-1
-  # grp <- grp %>% left_join(dt, by = "GROUPNUM")
+  grp <- grp %>% left_join(dt, by = c("GROUPNUM"))
   HVAR_RGRP[[ Rundates[i] ]][["GROUP"]] <- grp
   
-  grpx <- grp %>% select(GROUPIDX,DMINDEX, CCY1)
+  grpx <- grp %>% select(GROUPNUM,GROUPIDX,RCLASSID,DMINDEX, CCY1)
   #  Amend the others tab
   HVAR_RGRP[[ Rundates[i] ]][["GRP"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
-  # HVAR_RGRP[[ Rundates[i] ]][["GRPSFT"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
+  grpsft <- HVAR_RGRP[[ Rundates[i] ]][["GRPSFT"]] %>% left_join(grpx, by = "GROUPIDX")
+ 
+   HVAR_RGRP[[ Rundates[i] ]][["GRPSFT"]] <- grpsft %>%
+    mutate (RISKTYPE = case_when(
+      str_detect(DMINDEX, pattern = ANY_CHAR %R% "_F" %R% ANY_CHAR) == TRUE ~ "CS_VaR",
+      str_detect(DMINDEX, pattern = ANY_CHAR %R% "_G" %R% ANY_CHAR) == TRUE ~ "CS_VaR",
+      str_detect(DMINDEX, pattern = ANY_CHAR %R% "_Y" %R% ANY_CHAR) == TRUE ~ "CS_VaR",
+      str_detect(DMINDEX, pattern = ANY_CHAR %R% "_S" %R% ANY_CHAR) == TRUE ~ "CS_VaR",
+      str_detect(DMINDEX, pattern = ANY_CHAR %R% "_C" %R% ANY_CHAR) == TRUE ~ "CS_VaR",
+      # str_detect(DMINDEX, pattern = ANY_CHAR %R% "PRDEUR" %R% ANY_CHAR) == TRUE ~ "PRDEUR",
+      # str_detect(DMINDEX, pattern = ANY_CHAR %R% "PRDGBP" %R% ANY_CHAR) == TRUE ~ "PRDGBP",
+      # str_detect(DMINDEX, pattern = ANY_CHAR %R% "PRDUSD" %R% ANY_CHAR) == TRUE ~ "PRDUSD",
+      # str_detect(DMINDEX, pattern = ANY_CHAR %R% "PRDUSD" %R% ANY_CHAR) == TRUE ~ "PRDUSD",
+      # str_detect(DMINDEX, pattern = ANY_CHAR %R% "R2RUSD" %R% ANY_CHAR) == TRUE ~ "R2RUSD",
+      TRUE ~"IR"
+    ))
+  # grpsft <- grpsft %>%  select(GROUPIDX)                        )
   # HVAR_RGRP[[ Rundates[i] ]][["TRDGRPSFT"]] <- HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(grpx, by = "GROUPIDX")
   
   # HVAR_RGRP[[ Rundates[i] ]][["GRP"]] <-  HVAR_RGRP[[ Rundates[i] ]][["GRP"]] %>% left_join(dt, )
@@ -78,8 +94,8 @@ for (i in seq_along(Rundates)) {
                       str_detect(ALTID, pattern = ANY_CHAR %R% "PRDGBP" %R% ANY_CHAR) == TRUE ~ "PRDGBP",
                       str_detect(ALTID, pattern = ANY_CHAR %R% "PRDUSD" %R% ANY_CHAR) == TRUE ~ "PRDUSD",
                       str_detect(ALTID, pattern = ANY_CHAR %R% "PRDUSD" %R% ANY_CHAR) == TRUE ~ "PRDUSD",
-        str_detect(ALTID, pattern = ANY_CHAR %R% "R2RUSD" %R% ANY_CHAR) == TRUE ~ "R2RUSD",
-        TRUE ~"OTHERS"
+                      str_detect(ALTID, pattern = ANY_CHAR %R% "R2RUSD" %R% ANY_CHAR) == TRUE ~ "R2RUSD",
+                      TRUE ~"OTHERS"
       )) %>%
       mutate (RISKCCY = case_when(
                           str_detect(DESCRIPTION, pattern = ANY_CHAR %R% "USD" %R% ANY_CHAR) == TRUE ~ "USD",
@@ -116,7 +132,7 @@ for (i in seq_along(Rundates)) {
   trd_gpsft <-  trd_gpsft %>% left_join(grpx, by = "GROUPIDX")
   
   # removing dmindex because not correct
-  trd_gpsft
+  # trd_gpsft
   # adding column from secfilter
   trd_gpsft <- trd_gpsft %>% left_join(secFilter, by = "SECID")
   HVAR_RGRP[[ Rundates[i] ]] [["TRDGRPSFT"]] <- trd_gpsft
